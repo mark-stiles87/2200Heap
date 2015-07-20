@@ -172,7 +172,6 @@ Heap<DataType, KeyType, Comparator>::remove()
                         }
                         
                 }
-		delete[] dataItems;
                 return retVal;
         }
 }
