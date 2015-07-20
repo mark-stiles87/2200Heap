@@ -1,3 +1,5 @@
 Constructors
 Assignment
 Equality
+Destructor
+Remove()
