@@ -111,6 +111,85 @@ bool Heap<DataType, KeyType, Comparator>::operator==(const Heap& other) const
 	return 1;
 }
 
+template <typename DataType, typename KeyType, typename Comparator>
+Heap<DataType, KeyType, Comparator>::~Heap()
+{
+        clear();
+}
+
+template <typename DataType, typename KeyType, typename Comparator>
+Heap<DataType, KeyType, Comparator>::remove()
+{
+        if (size == 0)
+                return;
+        else if (size == 1)
+        {
+                retVal = new dataItems[0];
+                delete[] dataItems;
+
+                return retVal;
+        else
+        {
+                const int last = size - 1;
+                const int first = 0;
+
+                retVal = new dataItems[first];
+                delete dataItems[first];
+
+                dataItems[first] = new dataItems[last];
+                delete dataItems[last];
+
+                int i = 0;
+                
+                // checks if the current data item is less than one of its children AND stops before end of array is
+                // reached
+
+                while (((dataItems[i] < dataItems[i + 1]) || (dataItems[i] < dataItems[i + 2])) && (i < size-3))
+                {
+                        if (dataItems[i + 1] > dataItems[i + 2])
+                        {
+                                if (dataItems[i] < dataItems[i + 1])
+                                {
+                                        temp = new dataItems[i];
+                                        delete dataItems[i];
+
+                                        dataItems[i] = new dataItems[i + 1];
+                                        dataItems[i + 1] = temp;
+                                        i = i + 1;
+                                }
+                        }
+                        else if (dataItems[i + 1] < dataItems[i + 2])
+                        {
+                                if (dataItems[i] < dataItems[i + 2])
+                                {
+                                        temp = new dataItem[i];
+                                        delete dataItems[i];
+
+                                        dataItems[i] = new dataItems[i + 2];
+                                        dataItems[i + 2] = temp;
+                                        i = i + 2;
+                                }
+                        }
+                        
+                }
+		delete[] dataItems;
+                return retVal;
+        }
+}
+
+template <typename DataType, typename KeyType, typename Comparator>
+Heap<DataType, KeyType, Comparator>::clear()
+{
+        for (int i = 0; i < size; i++)
+        {
+                if (dataItems[i] != NULL)
+                        delete dataItems[i];
+        }
+        
+        delete[] dataItems;
+	
+}
+
 template < typename DataType, typename KeyType, typename Comparator >
 void Heap<DataType, KeyType, Comparator>::showStructure() const
 
