@@ -58,7 +58,7 @@ class Heap
     // Recursive helper of the showStructure() function
     void showSubtree(int index, int level) const;
 
-	void heapify(); //Helper for insertion and removal.
+	void heapifyUp(); //Helper for insertion.
 	//Requires: an array that is not in heap form.
 	//Result: dataItems is in heap form.
 
