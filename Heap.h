@@ -115,17 +115,18 @@ template <typename DataType, typename KeyType, typename Comparator>
 Heap<DataType, KeyType, Comparator>::~Heap()
 {
         clear();
+        delete[] dataItems;
 }
 
 template <typename DataType, typename KeyType, typename Comparator>
-Heap<DataType, KeyType, Comparator>::remove()
+DataType Heap<DataType, KeyType, Comparator>::remove()
 {
         if (size == 0)
                 return;
         else if (size == 1)
         {
                 retVal = new dataItems[0];
-                delete[] dataItems;
+                delete dataItems[0];
 
                 return retVal;
         else
@@ -144,11 +145,11 @@ Heap<DataType, KeyType, Comparator>::remove()
                 // checks if the current data item is less than one of its children AND stops before end of array is
                 // reached
 
-                while (((dataItems[i] < dataItems[i + 1]) || (dataItems[i] < dataItems[i + 2])) && (i < size-3))
+                while ((comparator(i, i+1) || comparator(i, i+2)) && comparator(i, size-3))
                 {
-                        if (dataItems[i + 1] > dataItems[i + 2])
+                        if (comparator(i+2, i+1))
                         {
-                                if (dataItems[i] < dataItems[i + 1])
+                                if (comparator(i, i+1))
                                 {
                                         temp = new dataItems[i];
                                         delete dataItems[i];
@@ -158,9 +159,9 @@ Heap<DataType, KeyType, Comparator>::remove()
                                         i = i + 1;
                                 }
                         }
-                        else if (dataItems[i + 1] < dataItems[i + 2])
+                        else if (comparator(i+1, i+2))
                         {
-                                if (dataItems[i] < dataItems[i + 2])
+                                if (comparator(i, i+2))
                                 {
                                         temp = new dataItem[i];
                                         delete dataItems[i];
@@ -184,9 +185,6 @@ Heap<DataType, KeyType, Comparator>::clear()
                 if (dataItems[i] != NULL)
                         delete dataItems[i];
         }
-        
-        delete[] dataItems;
-	
 }
 
 template < typename DataType, typename KeyType, typename Comparator >
