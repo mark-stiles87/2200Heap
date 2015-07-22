@@ -3,3 +3,5 @@ Assignment
 Equality
 Destructor
 Remove()
+insert
+clear
