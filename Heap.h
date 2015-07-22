@@ -29,7 +29,7 @@ public:
 	// Constructor
 	Heap(int = DEFAULT_MAX_HEAP_SIZE); // Default constructor + basic constr
 	Heap(const Heap&);		    // Copy constructor
-	Heap& operator= (const Heap&);  // Overloaded assignment operator
+	Heap<DataType, KeyType, Comparator>& operator= (const Heap<DataType, KeyType, Comparator>&);  // Overloaded assignment operator
 
 	// Destructor
 	~Heap();
@@ -87,7 +87,7 @@ Heap<DataType, KeyType, Comparator>::Heap(const Heap& other)
 }
 
 template <typename DataType, typename KeyType, typename Comparator>
-Heap& Heap<DataType, KeyType, Comparator>::operator=(const Heap& other)
+Heap<DataType, KeyType, Comparator>& Heap<DataType, KeyType, Comparator>::operator=(const Heap<DataType, KeyType, Comparator>& other)
 {
 	if (this == other)
 		return this;
@@ -123,7 +123,10 @@ Heap<DataType, KeyType, Comparator>::~Heap()
 template <typename DataType, typename KeyType, typename Comparator>
 void Heap<DataType, KeyType, Comparator>::insert(const DataType& newData)
 {
-	heapifyUp(size, newData);
+	if (0 == size)
+		dataItems[0] = newData;
+	else
+		heapifyUp(size, newData);
 	size++;
 	return;
 }
@@ -131,24 +134,23 @@ void Heap<DataType, KeyType, Comparator>::insert(const DataType& newData)
 template <typename DataType, typename KeyType, typename Comparator>
 DataType Heap<DataType, KeyType, Comparator>::remove()
 {
+	DataType retVal, temp;
+	const int last = size - 1;
+	const int first = 0;
 	if (size == 0)
-		return;
+		return 0;
 	else if (size == 1)
 	{
-		retVal = new dataItems[0];
-		delete dataItems[0];
-
+		retVal = dataItems[0];
+		size--;
 		return retVal;
 	}
 	else
-		const int last = size - 1;
-		const int first = 0;
+	{
 
-		retVal = new dataItems[first];
-		delete dataItems[first];
+		retVal = dataItems[first];
 
-		dataItems[first] = new dataItems[last];
-		delete dataItems[last];
+		dataItems[first] = dataItems[last];
 
 		int i = 0;
 
@@ -161,10 +163,9 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 			{
 				if (comparator(i, i + 1))
 				{
-					temp = new dataItems[i];
-					delete dataItems[i];
+					temp = dataItems[i];
 
-					dataItems[i] = new dataItems[i + 1];
+					dataItems[i] = dataItems[i + 1];
 					dataItems[i + 1] = temp;
 					i = i + 1;
 				}
@@ -173,96 +174,24 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 			{
 				if (comparator(i, i + 2))
 				{
-					temp = new dataItem[i];
-					delete dataItems[i];
+					temp = dataItems[i];
 
-					dataItems[i] = new dataItems[i + 2];
+					dataItems[i] = dataItems[i + 2];
 					dataItems[i + 2] = temp;
 					i = i + 2;
 				}
 			}
 
 		}
+		size--;
 		return retVal;
-}
-
-template <typename DataType, typename KeyType, typename Comparator>
-Heap<DataType, KeyType, Comparator>::clear()
-{
-	for (int i = 0; i < size; i++)
-	{
-		if (dataItems[i] != NULL)
-			delete dataItems[i];
-	}
-}
-
-template < typename DataType, typename KeyType, typename Comparator >
-void Heap<DataType, KeyType, Comparator>::showStructure() const
-
-	// Outputs the priorities of the data items in a heap in both array
-	// and tree form. If the heap is empty, outputs "Empty heap". This
-	// operation is intended for testing/debugging purposes only.
-
-{
-	int j;   // Loop counter
-
-	cout << endl;
-	if (size == 0)
-		cout << "Empty heap" << endl;
-	else
-	{
-		cout << "size = " << size << endl;       // Output array form
-		for (j = 0; j < maxSize; j++)
-			cout << j << "\t";
-		cout << endl;
-		for (j = 0; j < size; j++)
-			cout << dataItems[j].getPriority() << "\t";
-		cout << endl << endl;
-		showSubtree(0, 0);                        // Output tree form
-	}
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-template < typename DataType, typename KeyType, typename Comparator >
-void Heap<DataType, KeyType, Comparator>::showSubtree(int index, int level) const
-
-	// Helper function for the showStructure() function. Outputs the
-	// subtree (subheap) whose root is stored in dataItems[index]. Argument
-	// level is the level of this dataItems within the tree.
-
-{
-	int j;   // Loop counter
-
-	if (index < size)
-	{
-		showSubtree(2 * index + 2, level + 1);        // Output right subtree
-		for (j = 0; j < level; j++)        // Tab over to level
-			cout << "\t";
-		cout << " " << dataItems[index].getPriority();   // Output dataItems's priority
-		if (2 * index + 2 < size)                // Output "connector"
-			cout << "<";
-		else if (2 * index + 1 < size)
-			cout << "\\";
-		cout << endl;
-		showSubtree(2 * index + 1, level + 1);        // Output left subtree
 	}
 }
 
 template <typename DataType, typename KeyType, typename Comparator>
-void Heap<DataType, KeyType, Comparator>::heapifyUp(const int index, const DataType& data)
+void Heap<DataType, KeyType, Comparator>::clear()
 {
-	int child = index, current = index;
-	int parent = (child - 1) / 2;
-	dataItems[index] = data;
-	while (comparator(dataItems[parent], data))
-	{
-		dataItems[child] = dataItems[parent];
-		child = parent;
-		parent = (child - 1) / 2;
-		current = child;
-	}
-	dataItems[current] = data;
+	size = 0;
 	return;
 }
 
@@ -276,4 +205,86 @@ template <typename DataType, typename KeyType, typename Comparator>
 bool Heap<DataType, KeyType, Comparator>::isFull() const
 {
 	return size == maxSize;
+}
+
+template <typename DataType, typename KeyType, typename Comparator>
+void Heap<DataType, KeyType, Comparator>::showStructure() const
+{
+	for (int i = 0; i < size; i++)
+		cout << dataItems[i] << ' ';
+	cout << endl;
+	return;
+}
+
+//
+//template < typename DataType, typename KeyType, typename Comparator >
+//void Heap<DataType, KeyType, Comparator>::showStructure() const
+//
+//	// Outputs the priorities of the data items in a heap in both array
+//	// and tree form. If the heap is empty, outputs "Empty heap". This
+//	// operation is intended for testing/debugging purposes only.
+//
+//{
+//	int j;   // Loop counter
+//
+//	cout << endl;
+//	if (size == 0)
+//		cout << "Empty heap" << endl;
+//	else
+//	{
+//		cout << "size = " << size << endl;       // Output array form
+//		for (j = 0; j < maxSize; j++)
+//			cout << j << "\t";
+//		cout << endl;
+//		for (j = 0; j < size; j++)
+//			cout << dataItems[j].getPriority() << "\t";
+//		cout << endl << endl;
+//		showSubtree(0, 0);                        // Output tree form
+//	}
+//}
+//
+//// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//
+//template < typename DataType, typename KeyType, typename Comparator >
+//void Heap<DataType, KeyType, Comparator>::showSubtree(int index, int level) const
+//
+//	// Helper function for the showStructure() function. Outputs the
+//	// subtree (subheap) whose root is stored in dataItems[index]. Argument
+//	// level is the level of this dataItems within the tree.
+//
+//{
+//	int j;   // Loop counter
+//
+//	if (index < size)
+//	{
+//		showSubtree(2 * index + 2, level + 1);        // Output right subtree
+//		for (j = 0; j < level; j++)        // Tab over to level
+//			cout << "\t";
+//		cout << " " << dataItems[index].getPriority();   // Output dataItems's priority
+//		if (2 * index + 2 < size)                // Output "connector"
+//			cout << "<";
+//		else if (2 * index + 1 < size)
+//			cout << "\\";
+//		cout << endl;
+//		showSubtree(2 * index + 1, level + 1);        // Output left subtree
+//	}
+//}
+
+template <typename DataType, typename KeyType, typename Comparator>
+void Heap<DataType, KeyType, Comparator>::heapifyUp(const int index, const DataType& data)
+{
+	int child = index, current = index;
+	int parent = (child - 1) / 2;
+	dataItems[index] = data;
+	while (comparator(dataItems[parent], data))
+	{
+		dataItems[child] = dataItems[parent];
+		child = parent;
+		parent = (child - 1) / 2;
+		current = child;
+		if (0 == child)
+			break;
+	}
+	dataItems[current] = data;
+	return;
 }
