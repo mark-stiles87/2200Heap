@@ -5,3 +5,5 @@ Destructor
 Remove()
 insert
 clear
+isEmpty
+isFull
