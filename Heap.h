@@ -265,3 +265,15 @@ void Heap<DataType, KeyType, Comparator>::heapifyUp(const int index, const DataT
 	dataItems[current] = data;
 	return;
 }
+
+template <typename DataType, typename KeyType, typename Comparator>
+bool Heap<DataType, KeyType, Comparator>::isEmpty() const
+{
+	return 0 == size;
+}
+
+template <typename DataType, typename KeyType, typename Comparator>
+bool Heap<DataType, KeyType, Comparator>::isFull() const
+{
+	return size == maxSize;
+}
