@@ -157,6 +157,63 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 		// checks if the current data item is less than one of its children AND stops before end of array is
 		// reached
 
+		while ((comparator(dataItems[i], dataItems[i + 1]) || comparator(dataItems[i], dataItems[i + 2])) && comparator(i, size - 2))
+		{
+			if (comparator(dataItems[i + 2], dataItems[i + 1]))
+			{
+				if (comparator(dataItems[i], dataItems[i + 1]))
+				{
+					temp = dataItems[i];
+
+					dataItems[i] = dataItems[i + 1];
+					dataItems[i + 1] = temp;
+					i = i + 1;
+				}
+			}
+			else if (comparator(dataItems[i + 1], dataItems[i + 2]))
+			{
+				if (comparator(dataItems[i], dataItems[i + 2]))
+				{
+					temp = dataItems[i];
+
+					dataItems[i] = dataItems[i + 2];
+					dataItems[i + 2] = temp;
+					i = i + 2;
+				}
+			}
+
+		}
+		size--;
+		return retVal;
+	}
+}
+
+template <typename DataType, typename KeyType, typename Comparator>
+DataType Heap<DataType, KeyType, Comparator>::remove()
+{
+	DataType retVal, temp;
+	const int last = size - 1;
+	const int first = 0;
+	if (size == 0)
+		return 0;
+	else if (size == 1)
+	{
+		retVal = dataItems[0];
+		size--;
+		return retVal;
+	}
+	else
+	{
+
+		retVal = dataItems[first];
+
+		dataItems[first] = dataItems[last];
+
+		int i = 0;
+
+		// checks if the current data item is less than one of its children AND stops before end of array is
+		// reached
+
 		while ((comparator(i, i + 1) || comparator(i, i + 2)) && comparator(i, size - 3))
 		{
 			if (comparator(i + 2, i + 1))
