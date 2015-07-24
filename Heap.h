@@ -19,6 +19,12 @@ public:
 	bool operator()(const KeyType &a, const KeyType &b) const { return a < b; }
 };
 
+template < typename KeyType = int >
+class Greater {
+public:
+	bool operator()(const KeyType &a, const KeyType &b) const { return a > b; }
+};
+
 template < typename DataType, typename KeyType = int, typename Comparator = Less<KeyType> >
 class Heap
 {
