@@ -61,7 +61,7 @@ public:
 	// Programming exercise #3 operation
 	// void writeLevels() const;              // Output in level order
 
-private:
+protected:
 
 	// Recursive helper of the showStructure() function
 	void showSubtree(int index, int level) const;
