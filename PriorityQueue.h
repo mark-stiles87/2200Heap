@@ -60,8 +60,6 @@ bool PriorityQueue<DataType, KeyType, Comparator>::isFull()
 template <typename DataType, typename KeyType, typename Comparator>
 PriorityQueue<DataType, KeyType, Comparator>::~PriorityQueue()
 {
-	clear();
-	delete[] dataItems;
 }
 
 template <typename DataType, typename KeyType, typename Comparator>
