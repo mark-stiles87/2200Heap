@@ -143,9 +143,7 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 	DataType retVal, temp;
 	const int last = size - 1;
 	const int first = 0;
-	if (size == 0)
-		return 0;
-	else if (size == 1)
+	if (size == 1)
 	{
 		retVal = dataItems[0];
 		size--;
@@ -163,11 +161,11 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 		// checks if the current data item is less than one of its children AND stops before end of array is
 		// reached
 
-		while ((comparator(dataItems[i], dataItems[i + 1]) || comparator(dataItems[i], dataItems[i + 2])) && comparator(i, size - 2))
+		while ((comparator(dataItems[i].getPriority(), dataItems[i + 1].getPriority()) || comparator(dataItems[i].getPriority(), dataItems[i + 2].getPriority())) && comparator(i, size - 2))
 		{
-			if (comparator(dataItems[i + 2], dataItems[i + 1]))
+			if (comparator(dataItems[i + 2].getPriority(), dataItems[i + 1].getPriority()))
 			{
-				if (comparator(dataItems[i], dataItems[i + 1]))
+				if (comparator(dataItems[i].getPriority(), dataItems[i + 1].getPriority()))
 				{
 					temp = dataItems[i];
 
@@ -176,9 +174,9 @@ DataType Heap<DataType, KeyType, Comparator>::remove()
 					i = i + 1;
 				}
 			}
-			else if (comparator(dataItems[i + 1], dataItems[i + 2]))
+			else if (comparator(dataItems[i + 1].getPriority(), dataItems[i + 2].getPriority()))
 			{
-				if (comparator(dataItems[i], dataItems[i + 2]))
+				if (comparator(dataItems[i].getPriority(), dataItems[i + 2].getPriority()))
 				{
 					temp = dataItems[i];
 
@@ -218,7 +216,7 @@ template <typename DataType, typename KeyType, typename Comparator>
 void Heap<DataType, KeyType, Comparator>::showStructure() const
 {
 	for (int i = 0; i < size; i++)
-		cout << dataItems[i] << ' ';
+		cout << dataItems[i].getPriority() << ' ';
 	cout << endl;
 	return;
 }
@@ -283,7 +281,7 @@ void Heap<DataType, KeyType, Comparator>::heapifyUp(const int index, const DataT
 	int child = index, current = index;
 	int parent = (child - 1) / 2;
 	dataItems[index] = data;
-	while (comparator(dataItems[parent], data))
+	while (comparator(dataItems[parent].getPriority(), data.getPriority()))
 	{
 		dataItems[child] = dataItems[parent];
 		child = parent;
