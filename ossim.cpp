@@ -40,15 +40,15 @@ int main()
 	TaskData task;               // Task
 	int simLength,               // Length of simulation (minutes)
 		minute,                  // Current minute
-		numPtyLevels,            // Number of priority levels
+		numPtyLevels = 2,            // Number of priority levels
 		numArrivals = 0,             // Number of new tasks arriving
 		j;                     // Loop counter
 
 	// Seed the random number generator
 	srand((unsigned int)time(NULL));
 
-	cout << endl << "Enter the number of priority levels : ";
-	cin >> numPtyLevels;
+//	cout << endl << "Enter the number of priority levels : ";
+//	cin >> numPtyLevels;
 
 	cout << "Enter the length of time to run the simulator : ";
 	cin >> simLength;
@@ -59,24 +59,26 @@ int main()
 	{
 		// Dequeue the first task in the queue (if any).
 		if (taskPQ.isEmpty() == false)
-			taskPQ.dequeue();
-
-
-		// Determine the number of new tasks and add them to
-		// the queue.
-		if (taskPQ.isEmpty() == true)
 		{
-			j = 0;
-			while (j < numPtyLevels) // one new task for each priority level
-			{
-				task.priority = rand() % 100;
-				task.arrived = time(&timer); // sets task arrival at moment after priority level determined, moment before task enqueued.
-				taskPQ.enqueue(task);
-				j++;
-				numArrivals++;
-			}
+			task=taskPQ.dequeue();
+			cout << "Priority " << task.priority << " task arrived at " << task.arrived << " & completed at " << minute << endl;
 		}
 
+		numArrivals = rand() % 4;
+		switch (numArrivals)
+		{
+		case 2:
+			task.arrived = minute;
+			task.priority = rand() % numPtyLevels;
+			//task.priority = rand() % numPtyLevels - (task.arrived / simLength);
+			taskPQ.enqueue(task);
+		case 1:
+			task.arrived = minute;
+			task.priority = rand() % numPtyLevels;
+			taskPQ.enqueue(task);
+		default:
+			break;
+		}
 
 
 	}
