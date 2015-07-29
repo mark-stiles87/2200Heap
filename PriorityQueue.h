@@ -1,4 +1,3 @@
-
 //--------------------------------------------------------------------
 //
 //  Laboratory 12, Programming Exercise 1              PriorityQueue.h
